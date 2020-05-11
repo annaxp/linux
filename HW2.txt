@@ -1,0 +1,134 @@
+Home Work Linux Lesson2
+
+annaxp@iMac-Anna ~ % 
+annaxp@iMac-Anna ~ % prlctl list -a //ищем все ВМ в Parallels Desktop
+annaxp@iMac-Anna ~ % prlctl start Ubuntu-20.04 // Запускаем
+Starting the VM...
+The VM has been successfully started.
+annaxp@iMac-Anna ~ % 
+
+annaxp@iMac-Anna ~ % ssh 192.168.0.115
+Enter passphrase for key '/Users/annaxp/.ssh/id_rsa'//захожу в Linux
+-------
+
+annaxp@ubuntu-20-04:~$ 
+
+annaxp@ubuntu-20-04:~$ ls -la // посмотреть дирректорию
+annaxp@ubuntu-20-04:~$ cd .ssh // перейти в скрытую папку .ssh
+annaxp@ubuntu-20-04:~/.ssh$ ls -la 
+
+drwxrwxr-x  2 annaxp annaxp 4096 May 10 18:34 .
+drwxr-xr-x 17 annaxp annaxp 4096 May  9 18:38 ..
+-rw-------  1 annaxp annaxp  418 May 10 17:53 authorized_keys
+-rw-r--r--  1 annaxp annaxp  222 May 10 18:34 known_hosts
+
+annaxp@ubuntu-20-04:~/.ssh$ cat authorized_keys // нашла уже установленный ключ Parallels Desktop добавил его автоматически, так как я включила галочку в настройках
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWC8Brg/jX0NKj+BGiVHW+WTfB/V+dMBpUJM9TOYfhFj8pBpsFeIezGgDMtFctWNV1MiYMPHaGuCQDWl8W8LTouBj9wGoilF5waBQ9sMsos726l0vsBffPZ0QfpQHytE/KipQn1QHn/R7WstTGZZp8eh8ju5zWZfej74ePKT0VQ2fBbEEVetbLchg4PQzxttNFfLg3SKUYxiSrRFc5XcDlD//IhFICZRMebpxgsYqnPc012eHWD0kxk8pK+DcHqk75ga+0qLfqc+0yMcrgbECXX6+q7sDZ3z9g3fcSAam/djQk+m9d3iHxjuvujFtZh8LAB1Xc9G1Ezz1q+gP95xpN annaxp@iMac-Anna.local prltoolsd-tag
+
+
+annaxp@ubuntu-20-04:~/.ssh$ cd ~ // переход в домашний каталог
+
+annaxp@ubuntu-20-04:~$ ssh-keygen / генерируем новые ключи
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/annaxp/.ssh/id_rsa): id_rsa
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in id_rsa
+Your public key has been saved in id_rsa.pub
+The key fingerprint is:
+SHA256:1Cc12gxS+HnHUE3H0oVyGJps4pZpvOLsWmZSY7/O+kg annaxp@ubuntu-20-04
+The key's randomart image is:
++---[RSA 3072]----+
+|        .oo ++.*=|
+|        .+ O+.+ =|
+|        o.O.+= . |
+|       + =oo. o  |
+|      + S  . .   |
+|     o = .       |
+|    . E o        |
+|     O + .       |
+|    .o*+=        |
++----[SHA256]-----+
+annaxp@ubuntu-20-04:~$ cd .ssh
+annaxp@ubuntu-20-04:~/.ssh$ ls -la // проверяем
+total 24
+drwxrwxr-x  2 annaxp annaxp 4096 May 10 20:17 .
+drwxr-xr-x 17 annaxp annaxp 4096 May 10 20:06 ..
+-rw-------  1 annaxp annaxp  418 May 10 17:53 authorized_keys
+-rw-------  1 annaxp annaxp 2655 May 10 20:17 id_rsa
+-rw-r--r--  1 annaxp annaxp  573 May 10 20:17 id_rsa.pub
+-rw-r--r--  1 annaxp annaxp  222 May 10 18:34 known_hosts
+
+annaxp@ubuntu-20-04:~/.ssh$ cat id_rsa.pub //  проверяю ключи 
+// копирую ключ id_rsa.pub в authorized_keys 
+// копирую ключ id_rsa на Mac в папку ~/.ssh
+// добавила его в git
+
+annaxp@ubuntu-20-04:~$ git clone git@github.com:annaxp/linux.git //клонирую репозиторий
+
+Cloning into 'linux'...
+Warning: Permanently added the RSA host key for IP address '140.82.118.4' to the list of known hosts.
+Enter passphrase for key '/home/annaxp/.ssh/id_rsa': 
+remote: Enumerating objects: 8, done.
+remote: Counting objects: 100% (8/8), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 8 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (8/8), done.
+
+annaxp@ubuntu-20-04:~/linux$ ls -la // проверка установки
+total 16
+drwxrwxr-x  4 annaxp annaxp 4096 May 10 20:44 .
+drwxr-xr-x 18 annaxp annaxp 4096 May 10 20:44 ..
+drwxrwxr-x  8 annaxp annaxp 4096 May 10 20:44 .git
+drwxrwxr-x  2 annaxp annaxp 4096 May 10 20:44 .gitignore
+
+annaxp@ubuntu-20-04:~/linux$ git status// проверила статс
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+annaxp@ubuntu-20-04:~/linux$ git branch // проверила ветку
+* master
+annaxp@ubuntu-20-04:~/linux$ git checkout -b lesson2
+Switched to a new branch 'lesson2'
+annaxp@ubuntu-20-04:~/linux$ git branch
+* lesson2
+  master
+// перенос файла в ubuntu через буфер
+
+annaxp@ubuntu-20-04:~/linux$ 
+annaxp@ubuntu-20-04:~/linux$ git add HW2.txt
+annaxp@ubuntu-20-04:~/linux$ git status 
+On branch lesson2
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   HW2.txt
+annaxp@ubuntu-20-04:~/linux$ git commit -m 'added new file HW2.txt'
+[lesson2 6328bed] added new file HW2.txt
+ 1 file changed, 98 insertions(+)
+ create mode 100644 HW2.txt
+
+annaxp@ubuntu-20-04:~/linux$ git push
+fatal: The current branch lesson2 has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin lesson2
+
+annaxp@ubuntu-20-04:~/linux$ git push --set-upstream origin lesson2
+Enter passphrase for key '/home/annaxp/.ssh/id_rsa': 
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 2.13 KiB | 363.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: 
+remote: Create a pull request for 'lesson2' on GitHub by visiting:
+remote:      https://github.com/annaxp/linux/pull/new/lesson2
+remote: 
+To github.com:annaxp/linux.git
+ * [new branch]      lesson2 -> lesson2
+Branch 'lesson2' set up to track remote branch 'lesson2' from 'origin'.
+// все ок проверяем на сайте git и создаем New Pull requests
+// перед этим эти данные добавим в файл через vin
