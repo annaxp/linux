@@ -96,3 +96,39 @@ annaxp@ubuntu-20-04:~/linux$ git branch
 * lesson2
   master
 // перенос файла в ubuntu через буфер
+
+annaxp@ubuntu-20-04:~/linux$ 
+annaxp@ubuntu-20-04:~/linux$ git add HW2.txt
+annaxp@ubuntu-20-04:~/linux$ git status 
+On branch lesson2
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   HW2.txt
+annaxp@ubuntu-20-04:~/linux$ git commit -m 'added new file HW2.txt'
+[lesson2 6328bed] added new file HW2.txt
+ 1 file changed, 98 insertions(+)
+ create mode 100644 HW2.txt
+
+annaxp@ubuntu-20-04:~/linux$ git push
+fatal: The current branch lesson2 has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin lesson2
+
+annaxp@ubuntu-20-04:~/linux$ git push --set-upstream origin lesson2
+Enter passphrase for key '/home/annaxp/.ssh/id_rsa': 
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 2.13 KiB | 363.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+remote: 
+remote: Create a pull request for 'lesson2' on GitHub by visiting:
+remote:      https://github.com/annaxp/linux/pull/new/lesson2
+remote: 
+To github.com:annaxp/linux.git
+ * [new branch]      lesson2 -> lesson2
+Branch 'lesson2' set up to track remote branch 'lesson2' from 'origin'.
+// все ок проверяем на сайте git и создаем New Pull requests
+// перед этим эти данные добавим в файл через vin
