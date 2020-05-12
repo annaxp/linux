@@ -1,3 +1,87 @@
 Home Work Lesson 3
 
+// 1.Скрипт написала 
 
+annaxp@ubuntu-20-04:~$ cat script1
+#!/bin/bash
+
+echo "Hi! My Script is started"
+
+mkdir -p ~/tmp/lesson3/permissions
+
+echo "It is first file1.txt" > ~/tmp/lesson3/permissions/file1.txt
+
+ln ~/tmp/lesson3/permissions/file1.txt ~/tmp/lesson3/permissions/file1_hl.txt
+
+ln -s ~/tmp/lesson3/permissions/file1.txt ~/tmp/lesson3/permissions/file1_sl_1.txt
+
+ln -s ~/tmp/lesson3/permissions/file1_sl_1.txt ~/tmp/lesson3/file1_sl_2.txt
+
+ls -ila ~/tmp/lesson3/permissions
+ls -ila ~/tmp/lesson3
+
+mv ~/tmp/lesson3/permissions/file1_hl.txt ~/tmp
+mv ~/tmp/lesson3/permissions/file1_sl_1.txt ~/tmp
+
+ls -ila ~/tmp/lesson3/permissions
+ls -ila ~/tmp/lesson3
+ls -ila ~/tmp
+
+//2. При попытке запуска пишет что файл не найден. 
+annaxp@ubuntu-20-04:~$ which script1
+annaxp@ubuntu-20-04:~$ chmod +x /home/annaxp/script1 // Меняю права на запуск файла
+annaxp@ubuntu-20-04:~$ ls -ila /home/annaxp/script1
+1575828 -rwxrwxr-x 1 annaxp annaxp 617 May 12 19:22 /home/annaxp/script1  // проверяю все ok
+annaxp@ubuntu-20-04:~$ /home/annaxp/script1 //Запускаю скрипт
+Hi! My Script is started
+total 16
+1575811 drwxrwxr-x 2 annaxp annaxp 4096 May 12 19:29 .
+1575810 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 ..
+1575814 -rw-rw-r-- 2 annaxp annaxp   22 May 12 19:29 file1_hl.txt
+1575816 lrwxrwxrwx 1 annaxp annaxp   46 May 12 19:29 file1_sl_1.txt -> /home/annaxp/tmp/lesson3/permissions/file1.txt
+1575814 -rw-rw-r-- 2 annaxp annaxp   22 May 12 19:29 file1.txt
+total 12
+1575810 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 .
+1575808 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 ..
+1575821 lrwxrwxrwx 1 annaxp annaxp   51 May 12 19:29 file1_sl_2.txt -> /home/annaxp/tmp/lesson3/permissions/file1_sl_1.txt
+1575811 drwxrwxr-x 2 annaxp annaxp 4096 May 12 19:29 permissions
+total 12
+1575811 drwxrwxr-x 2 annaxp annaxp 4096 May 12 19:29 .
+1575810 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 ..
+1575814 -rw-rw-r-- 2 annaxp annaxp   22 May 12 19:29 file1.txt
+total 12
+1575810 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 .
+1575808 drwxrwxr-x 3 annaxp annaxp 4096 May 12 19:29 ..
+1575821 lrwxrwxrwx 1 annaxp annaxp   51 May 12 19:29 file1_sl_2.txt -> /home/annaxp/tmp/lesson3/permissions/file1_sl_1.txt
+1575811 drwxrwxr-x 2 annaxp annaxp 4096 May 12 19:29 permissions
+total 16
+1575808 drwxrwxr-x  3 annaxp annaxp 4096 May 12 19:29 .
+1581576 drwxr-xr-x 19 annaxp annaxp 4096 May 12 19:29 ..
+1575814 -rw-rw-r--  2 annaxp annaxp   22 May 12 19:29 file1_hl.txt
+1575816 lrwxrwxrwx  1 annaxp annaxp   46 May 12 19:29 file1_sl_1.txt -> /home/annaxp/tmp/lesson3/permissions/file1.txt
+1575810 drwxrwxr-x  3 annaxp annaxp 4096 May 12 19:29 lesson3
+// скрипт отработал дирректории файл и ссылки создались
+// потом я переместила ссылки в папку /tmp  иноды у файла и hard linka совпадают при переносе в другую дирректорию все работает
+// иноды у символических ссылок отличаются при переносе их в другую директорию работают
+
+annaxp@ubuntu-20-04:~$ ls -ila ~/tmp //проверка инодов
+total 16
+1575808 drwxrwxr-x  3 annaxp annaxp 4096 May 12 19:29 .
+1581576 drwxr-xr-x 19 annaxp annaxp 4096 May 12 19:29 ..
+1575814 -rw-rw-r--  2 annaxp annaxp   22 May 12 19:29 file1_hl.txt
+1575816 lrwxrwxrwx  1 annaxp annaxp   46 May 12 19:29 file1_sl_1.txt -> /home/annaxp/tmp/lesson3/permissions/file1.txt
+1575810 drwxrwxr-x  3 annaxp annaxp 4096 May 12 19:29 lesson3
+annaxp@ubuntu-20-04:~$ rm -r /home/annaxp/tmp // удаление всех созданных файлов
+annaxp@ubuntu-20-04:~$ ls -ila ~/tmp   // проверка
+ls: cannot access '/home/annaxp/tmp': No such file or directory // все ок
+annaxp@ubuntu-20-04:~$ cd linux  // переходим в гит для создания файла и переноса в репозиторий
+annaxp@ubuntu-20-04:~/linux$ git branch
+  lesson2
+* lesson3
+  master
+annaxp@ubuntu-20-04:~/linux$ vim HW3.txt
+
+//3. SetGIT установка прав доступа для GroupID 
+// установка  SGID chmod g+s devolopergroup name
+
+//4. Начинаю допишу в коментарии Git
