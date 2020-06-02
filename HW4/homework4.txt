@@ -1,0 +1,141 @@
+// 1. Создать пользователя, обладающего возможностью выполнять действия от имени суперпользователя.
+
+annaxp@ubuntu-20-04:~$ sudo useradd -m -G sudo -s /bin/bash user1sudo
+annaxp@ubuntu-20-04:~$ id user1sudo
+uid=1004(user1sudo) gid=1004(user1sudo) groups=1004(user1sudo),27(sudo)
+
+// назначаем пароль
+annaxp@ubuntu-20-04:~$ sudo passwd user1sudo
+New password: 
+Retype new password: 
+passwd: password updated successfully
+// проверка
+annaxp@ubuntu-20-04:~$ cat /etc/passwd | grep user1sudo
+user1sudo:x:1004:1004::/home/user1sudo:/bin/bash
+annaxp@ubuntu-20-04:~$ cat /etc/group | grep user1sudo
+sudo:x:27:annaxp,user1sudo
+user1sudo:x:1004:
+
+// было на уроке …. от root добавляем пользователя в группу docker и проверяем
+root@ubuntu-20-04:~# usermod -aG docker user1sudo
+root@ubuntu-20-04:~# id user1sudo
+uid=1004(user1sudo) gid=1004(user1sudo) groups=1004(user1sudo),27(sudo),998(docker)
+
+// 2. Создать группу developer, 
+
+root@ubuntu-20-04:/home/annaxp# groupadd developer
+root@ubuntu-20-04:/home/annaxp# cat /etc/group | grep developer
+developer:x:1005:
+
+// создадим несколько пользователей, входящих в эту группу. 
+
+root@ubuntu-20-04:/home/annaxp# useradd -m -G developer -s /bin/bash user1
+root@ubuntu-20-04:/home/annaxp# id user1
+uid=1005(user1) gid=1006(user1) groups=1006(user1),1005(developer)
+root@ubuntu-20-04:/home/annaxp# useradd -m -G developer -s /bin/bash user2
+root@ubuntu-20-04:/home/annaxp# useradd -m -G developer -s /bin/bash user3
+
+//проверка
+root@ubuntu-20-04:/home/annaxp# cat /etc/passwd | grep user
+user1sudo:x:1004:1004::/home/user1sudo:/bin/bash
+user1:x:1005:1006::/home/user1:/bin/bash
+user2:x:1006:1007::/home/user2:/bin/bash
+user3:x:1007:1008::/home/user3:/bin/bash
+rroot@ubuntu-20-04:/home/annaxp# cat /etc/group | grep developer
+developer:x:1005:user1sudo,user1,user2,user3
+
+//Создать директорию для совместной работы. Сделать так, чтобы созданные одними пользователями файлы могли изменять другие пользователи этой группы. 
+
+user1sudo@ubuntu-20-04:/home$ sudo mkdir developers
+//ll
+drwxr-xr-x  2 root      root      4096 May 31 23:24 developers/
+//меняем группу на developer
+root@ubuntu-20-04:/home/developers# chgrp -R developer /home/developers/
+//ll
+drwxr-xr-x  2 user1sudo developer 4096 May 31 23:24 developers/
+
+//меняю права для группы
+root@ubuntu-20-04:/home/developers# chmod g+s /home/developers/
+//ll
+drwxrwsr-x  3 user1sudo developer 4096 Jun  1 00:25 developers/
+
+//проверяем создаем файлы от разных Users и пробуем их редактировать и удалять
+user3@ubuntu-20-04:/home/developers$ ll
+total 36
+drwxrwsr-x 3 user1sudo developer 4096 Jun  2 12:45 ./
+drwxr-xr-x 8 root      root      4096 Jun  2 12:34 ../
+-rw-rw-r-- 1 user1     developer    4 Jun  2 12:43 file1
+-rw-rw-r-- 1 user1     developer    4 Jun  2 12:43 file2
+-rw-rw-r-- 1 user2     developer    4 Jun  2 12:43 file3
+-rw-rw-r-- 1 user2     developer    4 Jun  2 12:43 file4
+-rw-rw-r-- 1 user3     developer    4 Jun  2 12:44 file5
+-rw-rw-r-- 1 user3     developer    4 Jun  2 12:44 file6
+user3@ubuntu-20-04:/home/developers$ vim file1
+user3@ubuntu-20-04:/home/developers$ cat file1
+111
+333
+user3@ubuntu-20-04:/home/developers$ rm file1
+user3@ubuntu-20-04:/home/developers$ 
+// все работает//  drwxrwsr-x 3 user1sudo developer
+
+//Создать в директории для совместной работы поддиректорию для обмена файлами, но чтобы удалять файлы могли только их создатели.
+root@ubuntu-20-04:/home/developers# sudo mkdir exchange
+//ll
+drwxr-sr-x 2 root      developer 4096 Jun  2 12:53 exchange/
+// добавляем атрибут sticky bit
+root@ubuntu-20-04:/home/developers# chmod a+t /home/chdevelopers/exchange/
+
+drwxrwsrwT 2 root      developer 4096 Jun  2 13:53 exchenge/
+drwxrwsrwt 2 root      developer 4096 Jun  2 13:40 exchenge/
+drwxrwsr-t 2 root      developer 4096 Jun  2 13:26 exchange/ // этот вариант должен работать но увы
+drwxrwxrwt 2 root      developer 4096 Jun  2 13:13 exchange/
+drwxrwxrwT 2 root      developer 4096 Jun  2 13:53 exchenge/
+// Не редактирует другим пользователем, ок пробуем создать папку в другом месте и перенести 
+
+//НЕ OK идем в Сentos повторяем все это и ура все работает Глюк Ubuntu 20-04
+ls
+drwxrwsr-t. 2 root      devoloper 6 Jun  2 15:42 test-bit
+ls -la
+drwxrwsr-t. 2 root      devoloper 58 Jun  2 15:45 .
+drwxrwsr-x. 3 root      devoloper 48 Jun  2 15:42 ..
+-rw-rw-r--. 1 testuser1 devoloper 4 Jun  2 15:45 file1
+-rw-rw-r--. 1 testuser1 devoloper 4 Jun  2 15:45 file2
+-rw-rw-r--. 1 testuser2 devoloper 4 Jun  2 15:45 file3
+-rw-rw-r--. 1 testuser2 devoloper 4 Jun  2 15:45 file4
+
+[testuser2@centos-7 test-bit]$ echo 333 >> file2
+[testuser2@centos-7 test-bit]$ cat file2
+111
+333
+[testuser2@centos-7 test-bit]$ rm file1
+rm: cannot remove 'file1': Operation not permitted
+//ВСЕ РАБОТАЕТ //drwxrwsr-t. 2 root      devoloper
+
+3. // вывод скрипта сам скрипт в файле HW4script.sh
+
+root@ubuntu-20-04:/home/developers# ./HW4script.sh 
+========================================
+script run
+groupadd: group 'web' already exists
+The gruop already exists
+web:x:1009:
+1 ========================================
+groupadd: group 'geekbrains' already exists
+The gruop already exists
+geekbrains:x:1010:rockstar
+2 ========================================
+useradd: user 'rockstar' already exists
+The user rockstar already exists
+rockstar:x:143:1009::/home/rockstar:/bin/bash
+uid=143(rockstar) gid=1009(web) groups=1009(web),1010(geekbrains)
+3 ========================================
+success UID user rockstar alredy  143
+4 ========================================
+success GID user rockstar alredy  (web)
+5 ========================================
+success GROUPS user rockstar alredy  (geekbrains)
+root@ubuntu-20-04:/home/developers# 
+
+
+
+
